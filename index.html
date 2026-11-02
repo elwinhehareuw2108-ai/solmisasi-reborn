@@ -3,244 +3,532 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#18334a">
 <link rel="manifest" href="manifest.webmanifest">
-<title>SOLMISASI REBORN</title>
+<title>SOLMISASI REBORN V4</title>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#edf0f2;color:#17212b;font-family:Arial,sans-serif}
-header{background:#18334a;color:white;padding:18px}
-header h1{margin:0;font-size:22px}
-header p{margin:5px 0 0;color:#c9d8e2;font-size:13px}
+body{
+ margin:0;background:#edf0f2;color:#17212b;
+ font-family:Arial,sans-serif
+}
+header{background:#18334a;color:white;padding:20px}
+header h1{margin:0;font-size:23px;letter-spacing:1px}
+header p{margin:6px 0 0;color:#c9d8e2;font-size:13px}
 main{max-width:950px;margin:auto;padding:14px;display:grid;gap:13px}
-.panel{background:white;border:1px solid #d8dee3;border-radius:12px;padding:14px}
+.panel{
+ background:white;border:1px solid #d8dee3;
+ border-radius:12px;padding:15px
+}
 h2{font-size:16px;color:#18334a;margin:0 0 12px}
-label{font-size:12px;font-weight:bold;display:block;margin-bottom:5px}
-input,select,button{font:inherit;border-radius:8px;padding:10px;border:1px solid #cbd3d9}
-input{width:100%;min-width:0}
+label{font-size:12px;font-weight:bold;display:block;margin-bottom:6px}
+input,select,button{
+ font:inherit;border-radius:8px;padding:10px;
+ border:1px solid #cbd3d9
+}
+input,select{width:100%;background:white}
 button{background:#18334a;color:white;border:0;font-weight:bold}
 button.light{background:#e9eff3;color:#18334a;border:1px solid #cbd3d9}
 button.selected{background:#2475a5;color:white}
 .row{display:flex;gap:9px;flex-wrap:wrap;align-items:end}
-.field{flex:1;min-width:100px}
+.field{flex:1;min-width:105px}
 .voice-list{display:grid;gap:8px}
-.voice{border:1px solid #d8dee3;border-radius:9px;padding:10px}
+.voice{
+ border:1px solid #d8dee3;border-radius:9px;padding:11px
+}
 .voice.active{border:2px solid #2475a5;background:#f0f7fb}
 .voice-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .voice-name{font-weight:bold;font-size:14px}
 .voice button{padding:7px 12px;font-size:12px}
-.voice-notes{font-size:13px;color:#52616b;margin-top:8px;overflow-wrap:anywhere;min-height:18px}
+.voice-notes{font-size:13px;color:#52616b;margin-top:9px;overflow-wrap:anywhere;line-height:1.8}
 .pad{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
-.pad button{font-size:20px;padding:13px 0;background:#edf2f5;color:#18334a;border:1px solid #cbd3d9}
+.pad button{
+ font-size:20px;padding:14px 0;background:#edf2f5;
+ color:#18334a;border:1px solid #cbd3d9
+}
 .toolbar{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
-.toolbar button{flex:1;min-width:90px}
+.toolbar button{flex:1;min-width:95px}
 .duration{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-.duration button{font-size:12px;padding:10px 4px}
+.duration button{font-size:12px;padding:11px 3px}
 .status{font-size:12px;color:#6b7880;line-height:1.5}
+.score{
+ background:#fffdf7;border:1px solid #d8d0bd;
+ border-radius:8px;padding:12px;min-height:65px;
+ overflow-wrap:anywhere;line-height:2
+}
 footer{text-align:center;font-size:12px;color:#71808a;padding:15px}
+@media(max-width:380px){
+ .duration button{font-size:10px}
+}
 </style>
 </head>
+
 <body>
+
 <header>
 <h1>SOLMISASI REBORN</h1>
-<p>Multi Voice Notation Studio · 8 jalur suara</p>
+<p>Version 4 · Multi Voice Notation Studio</p>
 </header>
+
 <main>
+
 <section class="panel">
 <h2>Identitas lagu</h2>
 <div class="row">
-<div class="field"><label>Judul lagu</label><input id="song" value="Lagu Baru"></div>
-<div class="field"><label>Nada dasar</label>
+<div class="field">
+<label>Judul lagu</label>
+<input id="song" value="Lagu Baru">
+</div>
+
+<div class="field">
+<label>Nada dasar</label>
 <select id="key">
-<option value="C">C Mayor</option><option value="D">D Mayor</option>
-<option value="E">E Mayor</option><option value="F">F Mayor</option>
-<option value="G">G Mayor</option><option value="A">A Mayor</option>
+<option value="C">C Mayor</option>
+<option value="D">D Mayor</option>
+<option value="E">E Mayor</option>
+<option value="F">F Mayor</option>
+<option value="G">G Mayor</option>
+<option value="A">A Mayor</option>
 <option value="Bb">Bb Mayor</option>
-</select></div>
-<div class="field"><label>Tempo (BPM)</label><input id="tempo" type="number" min="40" max="240" value="100"></div>
+</select>
+</div>
+
+<div class="field">
+<label>Tempo BPM</label>
+<input id="tempo" type="number" min="40" max="240" value="100">
+</div>
+
+<div class="field">
+<label>Birama</label>
+<select id="meter">
+<option value="4/4">4/4</option>
+<option value="3/4">3/4</option>
+<option value="2/4">2/4</option>
+<option value="6/8">6/8</option>
+</select>
+</div>
+</div>
+</section>
+
+<section class="panel">
+<h2>Partitur lagu</h2>
+<div class="score" id="score">
+Belum ada notasi.
 </div>
 </section>
 
 <section class="panel">
 <h2>Delapan jalur suara</h2>
-<p class="status">Pilih jalur untuk mengedit notasinya secara terpisah.</p>
+<p class="status">Pilih jalur yang ingin diedit. Setiap jalur mempunyai notasi sendiri.</p>
 <div class="voice-list" id="voiceList"></div>
 </section>
 
 <section class="panel">
 <h2 id="activeTitle">Input Sopran 1</h2>
+
 <label>Durasi nada</label>
 <div class="duration">
 <button class="selected" data-duration="4">Penuh<br>4 ketuk</button>
 <button class="light" data-duration="2">Setengah<br>2 ketuk</button>
 <button class="light" data-duration="1">Seperempat<br>1 ketuk</button>
-<button class="light" data-duration="0.5">1/8<br>½ ketuk</button>
+<button class="light" data-duration="0.5">Seperdelapan<br>½ ketuk</button>
 </div>
-<p class="status" id="durationStatus">Durasi terpilih: not penuh (4 ketukan)</p>
-<h2 style="margin-top:16px">Not angka</h2>
+
+<div class="toolbar">
+<button class="light" id="dot">● Titik: OFF</button>
+</div>
+
+<p class="status" id="durationStatus">
+Durasi: penuh · 4 ketukan
+</p>
+
+<label>Oktaf</label>
+<select id="octave">
+<option value="-2">Sangat rendah</option>
+<option value="-1">Rendah</option>
+<option value="0" selected>Normal</option>
+<option value="1">Tinggi</option>
+<option value="2">Sangat tinggi</option>
+</select>
+
+<label style="margin-top:12px">Tanda nada</label>
+<select id="accidental">
+<option value="0">Natural (♮)</option>
+<option value="1">Kres (#)</option>
+<option value="-1">Mol (♭)</option>
+</select>
+
+<h2 style="margin-top:18px">Not angka</h2>
 <div class="pad">
-<button data-note="1">1</button><button data-note="2">2</button>
-<button data-note="3">3</button><button data-note="4">4</button>
-<button data-note="5">5</button><button data-note="6">6</button>
+<button data-note="1">1</button>
+<button data-note="2">2</button>
+<button data-note="3">3</button>
+<button data-note="4">4</button>
+<button data-note="5">5</button>
+<button data-note="6">6</button>
 <button data-note="7">7</button>
 </div>
+
 <div class="toolbar">
 <button class="light" id="rest">0 Istirahat</button>
 <button class="light" id="bar">| Garis birama</button>
 <button class="light" id="undo">Undo</button>
 <button class="light" id="clear">Hapus jalur</button>
 </div>
-<p class="status">Setiap nada menggunakan durasi yang dipilih saat dimasukkan.</p>
 </section>
 
 <section class="panel">
 <h2>Playback delapan suara</h2>
+
 <div class="row">
-<div class="field"><label>Volume</label><input id="volume" type="range" min="1" max="100" value="35"></div>
-<div class="field"><label>Tempo (BPM)</label><input id="playTempo" type="number" min="40" max="240" value="100"></div>
+<div class="field">
+<label>Volume</label>
+<input id="volume" type="range" min="1" max="100" value="35">
 </div>
+<div class="field">
+<label>Tempo BPM</label>
+<input id="playTempo" type="number" min="40" max="240" value="100">
+</div>
+</div>
+
 <div class="toolbar">
 <button id="play">▶ Putar semua suara</button>
 <button class="light" id="stop">■ Berhenti</button>
-<button class="light" id="export">Ekspor notasi TXT</button>
+<button class="light" id="export">Ekspor TXT</button>
 </div>
-<p id="status" class="status">Siap. Masukkan notasi pada jalur suara.</p>
+
+<p id="status" class="status">Siap digunakan.</p>
 </section>
+
 </main>
-<footer>SOLMISASI REBORN · Multi Voice Duration Prototype</footer>
+
+<footer>
+SOLMISASI REBORN V4 · Independent Music Notation Project
+</footer>
 
 <script>
-const names=["Sopran 1","Sopran 2","Alto 1","Alto 2","Tenor 1","Tenor 2","Bass 1","Bass 2"];
-const voices=names.map(()=>[]);
-const durations=[
- {value:4,label:"Penuh"},
- {value:2,label:"Setengah"},
- {value:1,label:"Seperempat"},
- {value:.5,label:"Seperdelapan"}
+const names=[
+ "Sopran 1","Sopran 2",
+ "Alto 1","Alto 2",
+ "Tenor 1","Tenor 2",
+ "Bass 1","Bass 2"
 ];
-const roots={C:60,D:62,E:64,F:65,G:67,A:69,Bb:70};
+
+const voices=names.map(()=>[]);
+
+const roots={
+ C:60,D:62,E:64,F:65,G:67,A:69,Bb:70
+};
+
 const semis=[0,2,4,5,7,9,11];
-const octaves=[12,12,0,0,-12,-12,-24,-24];
-let active=0,currentDuration=4,audio=null,stopRequested=false;
+
+const voiceOctaves=[12,12,0,0,-12,-12,-24,-24];
+
+let active=0;
+let currentDuration=4;
+let dotted=false;
+let audio=null;
+let stopRequested=false;
+
 const $=id=>document.getElementById(id);
 
-function durationLabel(value){
- const d=durations.find(x=>x.value===value);
- return d?d.label:value+" ketuk";
+function actualDuration(item){
+ return item.duration*(item.dotted?1.5:1);
 }
-function selectVoice(i){active=i;render()}
+
+function selectVoice(i){
+ active=i;
+ render();
+}
+
+function noteText(item){
+ if(item.note==="|")return "|";
+ if(item.note==="0")return "0";
+
+ let mark="";
+ if(item.accidental===1)mark="#";
+ if(item.accidental===-1)mark="b";
+
+ let octave="";
+ if(item.octave>0)octave="↑".repeat(item.octave);
+ if(item.octave<0)octave="↓".repeat(-item.octave);
+
+ let dot=item.dotted?".":"";
+
+ return item.note+mark+octave+dot;
+}
+
 function render(){
- const list=$("voiceList");list.innerHTML="";
+ const list=$("voiceList");
+ list.innerHTML="";
+
  names.forEach((name,i)=>{
   const item=document.createElement("div");
   item.className="voice"+(active===i?" active":"");
-  const head=document.createElement("div");head.className="voice-head";
-  const title=document.createElement("span");title.className="voice-name";title.textContent=name;
+
+  const head=document.createElement("div");
+  head.className="voice-head";
+
+  const title=document.createElement("span");
+  title.className="voice-name";
+  title.textContent=name;
+
   const btn=document.createElement("button");
   btn.textContent=active===i?"Sedang diedit":"Edit jalur";
-  btn.className=active===i?"":"light";btn.onclick=()=>selectVoice(i);
+  btn.className=active===i?"":"light";
+  btn.onclick=()=>selectVoice(i);
+
   head.append(title,btn);
-  const notes=document.createElement("div");notes.className="voice-notes";
+
+  const notes=document.createElement("div");
+  notes.className="voice-notes";
+
   notes.textContent=voices[i].length
-   ?voices[i].map(n=>n.note==="|"?"|":n.note+" ("+n.duration+")").join(" ")
+   ?voices[i].map(n=>n.note==="|"?"|":noteText(n)+" ("+actualDuration(n)+" ketuk)").join(" ")
    :"Belum ada notasi";
-  item.append(head,notes);list.append(item);
+
+  item.append(head,notes);
+  list.append(item);
  });
+
  $("activeTitle").textContent="Input "+names[active];
+
+ const all=names.map((name,i)=>{
+  return name+": "+voices[i].map(noteText).join(" ");
+ }).join("  |  ");
+
+ $("score").textContent=all.replace(/\|/g," | ");
 }
+
 function add(note){
- voices[active].push({note,duration:currentDuration});
+ voices[active].push({
+  note:note,
+  duration:currentDuration,
+  dotted:dotted,
+  octave:note==="0"?0:Number($("octave").value),
+  accidental:note==="0"?0:Number($("accidental").value)
+ });
  render();
 }
-document.querySelectorAll("[data-note]").forEach(b=>b.onclick=()=>add(b.dataset.note));
-document.querySelectorAll("[data-duration]").forEach(b=>{
- b.onclick=()=>{
-  currentDuration=Number(b.dataset.duration);
-  document.querySelectorAll("[data-duration]").forEach(x=>{
-   x.className=Number(x.dataset.duration)===currentDuration?"selected":"light";
+
+document.querySelectorAll("[data-note]").forEach(btn=>{
+ btn.onclick=()=>add(btn.dataset.note);
+});
+
+document.querySelectorAll("[data-duration]").forEach(btn=>{
+ btn.onclick=()=>{
+  currentDuration=Number(btn.dataset.duration);
+
+  document.querySelectorAll("[data-duration]").forEach(b=>{
+   b.className=Number(b.dataset.duration)===currentDuration
+    ?"selected":"light";
   });
-  $("durationStatus").textContent="Durasi terpilih: "+durationLabel(currentDuration)+" ("+currentDuration+" ketukan)";
+
+  updateDurationStatus();
  };
 });
+
+function updateDurationStatus(){
+ $("durationStatus").textContent=
+ "Durasi: "+currentDuration+" ketukan"+
+ (dotted?" · bertitik (+50%)":"");
+}
+
+$("dot").onclick=()=>{
+ dotted=!dotted;
+ $("dot").textContent="● Titik: "+(dotted?"ON":"OFF");
+ $("dot").className=dotted?"selected":"light";
+ updateDurationStatus();
+};
+
 $("rest").onclick=()=>add("0");
-$("bar").onclick=()=>voices[active].push({note:"|",duration:0})||render();
-$("undo").onclick=()=>{voices[active].pop();render()};
+
+$("bar").onclick=()=>{
+ voices[active].push({
+  note:"|",duration:0,dotted:false,octave:0,accidental:0
+ });
+ render();
+};
+
+$("undo").onclick=()=>{
+ voices[active].pop();
+ render();
+};
+
 $("clear").onclick=()=>{
- if(confirm("Hapus notasi jalur "+names[active]+"?")){
-  voices[active]=[];render();
+ if(confirm("Hapus seluruh notasi "+names[active]+"?")){
+  voices[active]=[];
+  render();
  }
 };
-function frequency(note,voice){
- const midi=roots[$("key").value]+semis[Number(note)-1]+octaves[voice];
+
+function frequency(item,voice){
+ const midi=
+  roots[$("key").value]+
+  semis[Number(item.note)-1]+
+  voiceOctaves[voice]+
+  item.octave*12+
+  item.accidental;
+
  return 440*Math.pow(2,(midi-69)/12);
 }
+
 function stopPlayback(){
  stopRequested=true;
- if(audio){audio.close().catch(()=>{});audio=null}
+
+ if(audio){
+  const old=audio;
+  audio=null;
+  old.close().catch(()=>{});
+ }
+
  $("status").textContent="Playback dihentikan.";
 }
+
 async function playAll(){
- stopPlayback();stopRequested=false;
+ stopPlayback();
+ stopRequested=false;
+
  const tempo=Math.max(40,Math.min(240,Number($("playTempo").value)||100));
  const beat=60/tempo;
  const volume=Number($("volume").value)/100;
- const events=[];let total=0;
+
+ const events=[];
+ let total=0;
+
  voices.forEach((voice,v)=>{
   let cursor=0;
+
   voice.forEach(item=>{
    if(item.note==="|")return;
+
+   const length=actualDuration(item);
+
    if(item.note!=="0"){
-    events.push({note:item.note,voice:v,start:cursor,duration:item.duration});
+    events.push({
+     item:item,
+     voice:v,
+     start:cursor,
+     duration:length
+    });
    }
-   cursor+=item.duration;
+
+   cursor+=length;
   });
+
   total=Math.max(total,cursor);
  });
- if(total===0){$("status").textContent="Belum ada notasi.";return}
+
+ if(total===0){
+  $("status").textContent="Belum ada notasi untuk diputar.";
+  return;
+ }
+
  const ctx=new(window.AudioContext||window.webkitAudioContext)();
- audio=ctx;await ctx.resume();
+ audio=ctx;
+
+ try{
+  await ctx.resume();
+ }catch(e){
+  $("status").textContent="Audio tidak dapat dijalankan.";
+  return;
+ }
+
  const start=ctx.currentTime+.15;
+
  events.forEach(e=>{
   const when=start+e.start*beat;
-  const osc=ctx.createOscillator(),gain=ctx.createGain();
-  osc.type="sine";osc.frequency.value=frequency(e.note,e.voice);
+  const length=e.duration*beat;
+
+  const osc=ctx.createOscillator();
+  const gain=ctx.createGain();
+
+  osc.type="sine";
+  osc.frequency.value=frequency(e.item,e.voice);
+
   const level=Math.max(.001,volume*.10);
+
   gain.gain.setValueAtTime(.0001,when);
   gain.gain.exponentialRampToValueAtTime(level,when+.025);
-  gain.gain.setValueAtTime(level,when+Math.max(.04,e.duration*beat-.07));
-  gain.gain.exponentialRampToValueAtTime(.0001,when+e.duration*beat);
-  osc.connect(gain);gain.connect(ctx.destination);
-  osc.start(when);osc.stop(when+e.duration*beat+.01);
+  gain.gain.setValueAtTime(level,when+Math.max(.03,length-.07));
+  gain.gain.exponentialRampToValueAtTime(.0001,when+length);
+
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+
+  osc.start(when);
+  osc.stop(when+length+.01);
  });
- $("status").textContent="Memutar semua jalur dengan durasi masing-masing...";
- await new Promise(resolve=>setTimeout(resolve,(total*beat+0.3)*1000));
+
+ $("status").textContent="Memutar seluruh jalur suara...";
+
+ await new Promise(resolve=>{
+  const check=()=>{
+   if(stopRequested||audio!==ctx){
+    resolve();
+   }else if(ctx.currentTime>=start+total*beat){
+    resolve();
+   }else{
+    setTimeout(check,100);
+   }
+  };
+  check();
+ });
+
  if(audio===ctx){
-  await ctx.close().catch(()=>{});audio=null;
+  audio=null;
+  await ctx.close().catch(()=>{});
   if(!stopRequested)$("status").textContent="Playback selesai.";
  }
 }
+
 $("play").onclick=playAll;
 $("stop").onclick=stopPlayback;
+
 $("export").onclick=()=>{
- let out="SOLMISASI REBORN\nJudul: "+$("song").value+
- "\nNada dasar: "+$("key").value+
- "\nTempo: "+$("playTempo").value+" BPM\n\n";
+ let output="SOLMISASI REBORN V4\n";
+ output+="Judul: "+$("song").value+"\n";
+ output+="Nada dasar: "+$("key").value+"\n";
+ output+="Tempo: "+$("playTempo").value+" BPM\n";
+ output+="Birama: "+$("meter").value+"\n\n";
+
  names.forEach((name,i)=>{
-  out+=name+":\n";
-  out+=voices[i].map(x=>x.note==="|"?"|":x.note+" ("+x.duration+" ketuk)").join(" ")+"\n\n";
+  output+=name+":\n";
+
+  output+=voices[i].map(item=>{
+   if(item.note==="|")return "|";
+   return noteText(item)+" ("+actualDuration(item)+" ketuk)";
+  }).join(" ");
+
+  output+="\n\n";
  });
- const blob=new Blob([out],{type:"text/plain;charset=utf-8"});
- const url=URL.createObjectURL(blob),a=document.createElement("a");
- a.href=url;a.download="solmisasi-reborn.txt";a.click();
- URL.revokeObjectURL(url);
+
+ const blob=new Blob([output],{
+  type:"text/plain;charset=utf-8"
+ });
+
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement("a");
+
+ a.href=url;
+ a.download="solmisasi-reborn-v4.txt";
+ a.click();
+
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
+ $("status").textContent="File notasi berhasil disiapkan.";
 };
+
 if("serviceWorker" in navigator){
  window.addEventListener("load",()=>{
   navigator.serviceWorker.register("./sw.js").catch(console.error);
  });
 }
+
 render();
+updateDurationStatus();
 </script>
+
 </body>
 </html>
