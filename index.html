@@ -1,8 +1,9 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#18334a">
 <link rel="manifest" href="manifest.webmanifest">
 <title>SOLMISASI REBORN</title>
@@ -17,9 +18,10 @@ main{max-width:950px;margin:auto;padding:14px;display:grid;gap:13px}
 h2{font-size:16px;color:#18334a;margin:0 0 12px}
 label{font-size:12px;font-weight:bold;display:block;margin-bottom:5px}
 input,select,button{font:inherit;border-radius:8px;padding:10px;border:1px solid #cbd3d9}
-input{min-width:0;width:100%}
+input{width:100%;min-width:0}
 button{background:#18334a;color:white;border:0;font-weight:bold}
 button.light{background:#e9eff3;color:#18334a;border:1px solid #cbd3d9}
+button.selected{background:#2475a5;color:white}
 .row{display:flex;gap:9px;flex-wrap:wrap;align-items:end}
 .field{flex:1;min-width:100px}
 .voice-list{display:grid;gap:8px}
@@ -27,12 +29,14 @@ button.light{background:#e9eff3;color:#18334a;border:1px solid #cbd3d9}
 .voice.active{border:2px solid #2475a5;background:#f0f7fb}
 .voice-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .voice-name{font-weight:bold;font-size:14px}
-.voice-notes{font-size:13px;color:#52616b;margin-top:8px;overflow-wrap:anywhere;min-height:18px}
 .voice button{padding:7px 12px;font-size:12px}
+.voice-notes{font-size:13px;color:#52616b;margin-top:8px;overflow-wrap:anywhere;min-height:18px}
 .pad{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
 .pad button{font-size:20px;padding:13px 0;background:#edf2f5;color:#18334a;border:1px solid #cbd3d9}
 .toolbar{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
 .toolbar button{flex:1;min-width:90px}
+.duration{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.duration button{font-size:12px;padding:10px 4px}
 .status{font-size:12px;color:#6b7880;line-height:1.5}
 footer{text-align:center;font-size:12px;color:#71808a;padding:15px}
 </style>
@@ -46,44 +50,39 @@ footer{text-align:center;font-size:12px;color:#71808a;padding:15px}
 <section class="panel">
 <h2>Identitas lagu</h2>
 <div class="row">
-<div class="field">
-<label>Judul lagu</label>
-<input id="song" value="Lagu Baru">
-</div>
-<div class="field">
-<label>Nada dasar</label>
+<div class="field"><label>Judul lagu</label><input id="song" value="Lagu Baru"></div>
+<div class="field"><label>Nada dasar</label>
 <select id="key">
-<option value="C">C Mayor</option>
-<option value="D">D Mayor</option>
-<option value="E">E Mayor</option>
-<option value="F">F Mayor</option>
-<option value="G">G Mayor</option>
-<option value="A">A Mayor</option>
+<option value="C">C Mayor</option><option value="D">D Mayor</option>
+<option value="E">E Mayor</option><option value="F">F Mayor</option>
+<option value="G">G Mayor</option><option value="A">A Mayor</option>
 <option value="Bb">Bb Mayor</option>
-</select>
-</div>
-<div class="field">
-<label>Tempo (BPM)</label>
-<input id="tempo" type="number" min="40" max="240" value="100">
-</div>
+</select></div>
+<div class="field"><label>Tempo (BPM)</label><input id="tempo" type="number" min="40" max="240" value="100"></div>
 </div>
 </section>
 
 <section class="panel">
 <h2>Delapan jalur suara</h2>
-<p class="status">Pilih jalur yang ingin diedit. Setiap jalur menyimpan notasinya sendiri.</p>
+<p class="status">Pilih jalur untuk mengedit notasinya secara terpisah.</p>
 <div class="voice-list" id="voiceList"></div>
 </section>
 
 <section class="panel">
 <h2 id="activeTitle">Input Sopran 1</h2>
+<label>Durasi nada</label>
+<div class="duration">
+<button class="selected" data-duration="4">Penuh<br>4 ketuk</button>
+<button class="light" data-duration="2">Setengah<br>2 ketuk</button>
+<button class="light" data-duration="1">Seperempat<br>1 ketuk</button>
+<button class="light" data-duration="0.5">1/8<br>½ ketuk</button>
+</div>
+<p class="status" id="durationStatus">Durasi terpilih: not penuh (4 ketukan)</p>
+<h2 style="margin-top:16px">Not angka</h2>
 <div class="pad">
-<button data-note="1">1</button>
-<button data-note="2">2</button>
-<button data-note="3">3</button>
-<button data-note="4">4</button>
-<button data-note="5">5</button>
-<button data-note="6">6</button>
+<button data-note="1">1</button><button data-note="2">2</button>
+<button data-note="3">3</button><button data-note="4">4</button>
+<button data-note="5">5</button><button data-note="6">6</button>
 <button data-note="7">7</button>
 </div>
 <div class="toolbar">
@@ -92,20 +91,14 @@ footer{text-align:center;font-size:12px;color:#71808a;padding:15px}
 <button class="light" id="undo">Undo</button>
 <button class="light" id="clear">Hapus jalur</button>
 </div>
-<p class="status">Angka 1–7 adalah nada. Angka 0 adalah istirahat. Garis birama menjadi pemisah notasi.</p>
+<p class="status">Setiap nada menggunakan durasi yang dipilih saat dimasukkan.</p>
 </section>
 
 <section class="panel">
-<h2>Playback 8 suara</h2>
+<h2>Playback delapan suara</h2>
 <div class="row">
-<div class="field">
-<label>Volume</label>
-<input id="volume" type="range" min="1" max="100" value="35">
-</div>
-<div class="field">
-<label>Durasi satu ketukan (BPM)</label>
-<input id="playTempo" type="number" min="40" max="240" value="100">
-</div>
+<div class="field"><label>Volume</label><input id="volume" type="range" min="1" max="100" value="35"></div>
+<div class="field"><label>Tempo (BPM)</label><input id="playTempo" type="number" min="40" max="240" value="100"></div>
 </div>
 <div class="toolbar">
 <button id="play">▶ Putar semua suara</button>
@@ -115,191 +108,138 @@ footer{text-align:center;font-size:12px;color:#71808a;padding:15px}
 <p id="status" class="status">Siap. Masukkan notasi pada jalur suara.</p>
 </section>
 </main>
-<footer>SOLMISASI REBORN · Versi Multi Voice Prototype</footer>
+<footer>SOLMISASI REBORN · Multi Voice Duration Prototype</footer>
 
 <script>
-const voiceNames=[
-"Sopran 1","Sopran 2",
-"Alto 1","Alto 2",
-"Tenor 1","Tenor 2",
-"Bass 1","Bass 2"
+const names=["Sopran 1","Sopran 2","Alto 1","Alto 2","Tenor 1","Tenor 2","Bass 1","Bass 2"];
+const voices=names.map(()=>[]);
+const durations=[
+ {value:4,label:"Penuh"},
+ {value:2,label:"Setengah"},
+ {value:1,label:"Seperempat"},
+ {value:.5,label:"Seperdelapan"}
 ];
-
-const voices=voiceNames.map(()=>[]);
-let active=0;
-let audio=null;
-let stopRequested=false;
-
+const roots={C:60,D:62,E:64,F:65,G:67,A:69,Bb:70};
+const semis=[0,2,4,5,7,9,11];
+const octaves=[12,12,0,0,-12,-12,-24,-24];
+let active=0,currentDuration=4,audio=null,stopRequested=false;
 const $=id=>document.getElementById(id);
 
-function selectVoice(i){
- active=i;
- render();
+function durationLabel(value){
+ const d=durations.find(x=>x.value===value);
+ return d?d.label:value+" ketuk";
 }
-
+function selectVoice(i){active=i;render()}
 function render(){
- const list=$("voiceList");
- list.innerHTML="";
- voiceNames.forEach((name,i)=>{
+ const list=$("voiceList");list.innerHTML="";
+ names.forEach((name,i)=>{
   const item=document.createElement("div");
   item.className="voice"+(active===i?" active":"");
-
-  const head=document.createElement("div");
-  head.className="voice-head";
-
-  const title=document.createElement("span");
-  title.className="voice-name";
-  title.textContent=name;
-
+  const head=document.createElement("div");head.className="voice-head";
+  const title=document.createElement("span");title.className="voice-name";title.textContent=name;
   const btn=document.createElement("button");
   btn.textContent=active===i?"Sedang diedit":"Edit jalur";
-  btn.className=active===i?"":"light";
-  btn.onclick=()=>selectVoice(i);
-
+  btn.className=active===i?"":"light";btn.onclick=()=>selectVoice(i);
   head.append(title,btn);
-
-  const notes=document.createElement("div");
-  notes.className="voice-notes";
+  const notes=document.createElement("div");notes.className="voice-notes";
   notes.textContent=voices[i].length
-   ? voices[i].join(" ")
-   : "Belum ada notasi";
-
-  item.append(head,notes);
-  list.append(item);
+   ?voices[i].map(n=>n.note==="|"?"|":n.note+" ("+n.duration+")").join(" ")
+   :"Belum ada notasi";
+  item.append(head,notes);list.append(item);
  });
-
- $("activeTitle").textContent="Input "+voiceNames[active];
+ $("activeTitle").textContent="Input "+names[active];
 }
-
-function addNote(n){
- voices[active].push(n);
+function add(note){
+ voices[active].push({note,duration:currentDuration});
  render();
 }
-
-document.querySelectorAll("[data-note]").forEach(btn=>{
- btn.onclick=()=>addNote(btn.dataset.note);
+document.querySelectorAll("[data-note]").forEach(b=>b.onclick=()=>add(b.dataset.note));
+document.querySelectorAll("[data-duration]").forEach(b=>{
+ b.onclick=()=>{
+  currentDuration=Number(b.dataset.duration);
+  document.querySelectorAll("[data-duration]").forEach(x=>{
+   x.className=Number(x.dataset.duration)===currentDuration?"selected":"light";
+  });
+  $("durationStatus").textContent="Durasi terpilih: "+durationLabel(currentDuration)+" ("+currentDuration+" ketukan)";
+ };
 });
-
-$("rest").onclick=()=>addNote("0");
-$("bar").onclick=()=>addNote("|");
-
-$("undo").onclick=()=>{
- voices[active].pop();
- render();
-};
-
+$("rest").onclick=()=>add("0");
+$("bar").onclick=()=>voices[active].push({note:"|",duration:0})||render();
+$("undo").onclick=()=>{voices[active].pop();render()};
 $("clear").onclick=()=>{
- if(confirm("Hapus seluruh notasi pada "+voiceNames[active]+"?")){
-  voices[active]=[];
-  render();
+ if(confirm("Hapus notasi jalur "+names[active]+"?")){
+  voices[active]=[];render();
  }
 };
-
 function frequency(note,voice){
- const roots={C:60,D:62,E:64,F:65,G:67,A:69,Bb:70};
- const semitones=[0,2,4,5,7,9,11];
- const octave=[12,12,0,0,-12,-12,-24,-24];
- const midi=roots[$("key").value]+semitones[Number(note)-1]+octave[voice];
+ const midi=roots[$("key").value]+semis[Number(note)-1]+octaves[voice];
  return 440*Math.pow(2,(midi-69)/12);
 }
-
 function stopPlayback(){
  stopRequested=true;
- if(audio){
-  audio.close().catch(()=>{});
-  audio=null;
- }
+ if(audio){audio.close().catch(()=>{});audio=null}
  $("status").textContent="Playback dihentikan.";
 }
-
 async function playAll(){
- stopPlayback();
- stopRequested=false;
-
- const maxSteps=Math.max(0,...voices.map(v=>v.length));
- if(maxSteps===0){
-  $("status").textContent="Belum ada notasi untuk diputar.";
-  return;
- }
-
+ stopPlayback();stopRequested=false;
  const tempo=Math.max(40,Math.min(240,Number($("playTempo").value)||100));
  const beat=60/tempo;
  const volume=Number($("volume").value)/100;
-
- audio=new (window.AudioContext||window.webkitAudioContext)();
- await audio.resume();
-
- const ctx=audio;
- const start=ctx.currentTime+.12;
-
- $("status").textContent="Memutar seluruh jalur suara...";
-
- for(let step=0;step<maxSteps;step++){
-  if(stopRequested||audio!==ctx)break;
-
-  for(let v=0;v<8;v++){
-   const n=voices[v][step];
-   if(!n||n==="0"||n==="|")continue;
-
-   const osc=ctx.createOscillator();
-   const gain=ctx.createGain();
-   const when=start+step*beat;
-
-   osc.type="sine";
-   osc.frequency.value=frequency(n,v);
-   gain.gain.setValueAtTime(.0001,when);
-   gain.gain.exponentialRampToValueAtTime(
-    Math.max(.001,volume*.10),when+.025
-   );
-   gain.gain.exponentialRampToValueAtTime(.0001,when+beat*.85);
-
-   osc.connect(gain);
-   gain.connect(ctx.destination);
-   osc.start(when);
-   osc.stop(when+beat*.9);
-  }
-
-  await new Promise(resolve=>setTimeout(resolve,beat*1000));
- }
-
+ const events=[];let total=0;
+ voices.forEach((voice,v)=>{
+  let cursor=0;
+  voice.forEach(item=>{
+   if(item.note==="|")return;
+   if(item.note!=="0"){
+    events.push({note:item.note,voice:v,start:cursor,duration:item.duration});
+   }
+   cursor+=item.duration;
+  });
+  total=Math.max(total,cursor);
+ });
+ if(total===0){$("status").textContent="Belum ada notasi.";return}
+ const ctx=new(window.AudioContext||window.webkitAudioContext)();
+ audio=ctx;await ctx.resume();
+ const start=ctx.currentTime+.15;
+ events.forEach(e=>{
+  const when=start+e.start*beat;
+  const osc=ctx.createOscillator(),gain=ctx.createGain();
+  osc.type="sine";osc.frequency.value=frequency(e.note,e.voice);
+  const level=Math.max(.001,volume*.10);
+  gain.gain.setValueAtTime(.0001,when);
+  gain.gain.exponentialRampToValueAtTime(level,when+.025);
+  gain.gain.setValueAtTime(level,when+Math.max(.04,e.duration*beat-.07));
+  gain.gain.exponentialRampToValueAtTime(.0001,when+e.duration*beat);
+  osc.connect(gain);gain.connect(ctx.destination);
+  osc.start(when);osc.stop(when+e.duration*beat+.01);
+ });
+ $("status").textContent="Memutar semua jalur dengan durasi masing-masing...";
+ await new Promise(resolve=>setTimeout(resolve,(total*beat+0.3)*1000));
  if(audio===ctx){
-  await ctx.close().catch(()=>{});
-  audio=null;
+  await ctx.close().catch(()=>{});audio=null;
   if(!stopRequested)$("status").textContent="Playback selesai.";
  }
 }
-
 $("play").onclick=playAll;
 $("stop").onclick=stopPlayback;
-
 $("export").onclick=()=>{
- let output="SOLMISASI REBORN\n";
- output+="Judul: "+$("song").value+"\n";
- output+="Nada dasar: "+$("key").value+"\n";
- output+="Tempo: "+$("playTempo").value+" BPM\n\n";
-
- voiceNames.forEach((name,i)=>{
-  output+=name+":\n";
-  output+=(voices[i].join(" ")||"(kosong)")+"\n\n";
+ let out="SOLMISASI REBORN\nJudul: "+$("song").value+
+ "\nNada dasar: "+$("key").value+
+ "\nTempo: "+$("playTempo").value+" BPM\n\n";
+ names.forEach((name,i)=>{
+  out+=name+":\n";
+  out+=voices[i].map(x=>x.note==="|"?"|":x.note+" ("+x.duration+" ketuk)").join(" ")+"\n\n";
  });
-
- const blob=new Blob([output],{type:"text/plain;charset=utf-8"});
- const url=URL.createObjectURL(blob);
- const a=document.createElement("a");
- a.href=url;
- a.download="solmisasi-reborn.txt";
- a.click();
+ const blob=new Blob([out],{type:"text/plain;charset=utf-8"});
+ const url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=url;a.download="solmisasi-reborn.txt";a.click();
  URL.revokeObjectURL(url);
 };
-
 if("serviceWorker" in navigator){
  window.addEventListener("load",()=>{
-  navigator.serviceWorker.register("./sw.js").catch(err=>{
-   console.log("Service worker belum aktif",err);
-  });
+  navigator.serviceWorker.register("./sw.js").catch(console.error);
  });
 }
-
 render();
 </script>
 </body>
