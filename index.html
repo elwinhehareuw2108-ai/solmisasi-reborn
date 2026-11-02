@@ -1,0 +1,142 @@
+
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#18334a">
+<title>SOLMISASI REBORN</title>
+<style>
+:root{--navy:#18334a;--paper:#fffdf7;--ink:#17212b;--line:#d7dce0}
+*{box-sizing:border-box}
+body{margin:0;background:#e9edf0;color:var(--ink);font:16px system-ui,sans-serif}
+header{background:var(--navy);color:white;padding:18px}
+header h1{font-size:21px;margin:0}
+header small{color:#c5d7e4}
+main{max-width:850px;margin:auto;padding:14px;display:grid;gap:12px}
+.panel{background:white;border:1px solid var(--line);border-radius:12px;padding:14px}
+h2{font-size:16px;margin:0 0 10px;color:var(--navy)}
+label{font-size:13px;font-weight:650;display:block;margin-bottom:5px}
+input,select,button{font:inherit;border-radius:8px;border:1px solid #bfc8ce;padding:10px;background:white;color:var(--ink)}
+input[type=number]{width:82px}
+button{background:var(--navy);color:white;border:0;font-weight:650}
+button.secondary{background:#e8eef2;color:var(--navy);border:1px solid #cbd5dc}
+.row,.toolbar{display:flex;gap:8px;align-items:end;flex-wrap:wrap}
+.field{flex:1;min-width:100px}
+.paper{background:var(--paper);border:1px solid #d8d0bd;border-radius:8px;min-height:150px;padding:14px}
+.score-title{text-align:center;font-weight:700;margin-bottom:10px}
+.notes{display:flex;flex-wrap:wrap;gap:8px;align-items:center;min-height:64px}
+.note{min-width:43px;text-align:center;padding:8px 5px;border:1px solid #d4c9b4;border-radius:6px;background:white;font-size:21px;font-weight:700}
+.note small{display:block;font-size:10px;color:#65717a;font-weight:500}
+.empty,.status{color:#71808a;font-size:13px}
+.pad{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.pad button{padding:13px 0;font-size:19px;background:#f1f5f7;color:var(--navy);border:1px solid #cbd5dc}
+footer{text-align:center;color:#71808a;font-size:12px;padding:8px 12px 24px}
+@media(min-width:650px){main{grid-template-columns:1fr 1fr}.wide{grid-column:1/-1}}
+</style>
+</head>
+<body>
+<header>
+<h1>SOLMISASI REBORN</h1>
+<small>Editor not angka · prototipe awal</small>
+</header>
+<main>
+<section class="panel wide">
+<h2>Identitas lagu</h2>
+<div class="row">
+<div class="field"><label>Judul lagu</label><input id="song" value="Lagu Baru" style="width:100%"></div>
+<div><label>Nada dasar</label><select id="key"><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>A</option><option>Bb</option></select></div>
+<div><label>Tempo</label><input id="tempo" type="number" min="40" max="240" value="100"></div>
+<div><label>Birama</label><select id="meter"><option>4/4</option><option>3/4</option><option>2/4</option><option>6/8</option></select></div>
+</div>
+</section>
+<section class="panel wide">
+<h2>Partitur not angka</h2>
+<div class="paper">
+<div class="score-title" id="scoreTitle">Lagu Baru · C Mayor</div>
+<div class="notes" id="notes"><div class="empty">Tekan angka di bawah untuk mulai menulis.</div></div>
+</div>
+<p class="status">Notasi sementara tersimpan selama halaman tetap terbuka.</p>
+</section>
+<section class="panel">
+<h2>Input not angka</h2>
+<div class="pad">
+<button data-note="1">1</button><button data-note="2">2</button><button data-note="3">3</button><button data-note="4">4</button><button data-note="5">5</button><button data-note="6">6</button><button data-note="7">7</button>
+</div>
+<div class="toolbar" style="margin-top:10px">
+<button class="secondary" id="rest">0 Istirahat</button>
+<button class="secondary" id="bar">| Birama</button>
+<button class="secondary" id="undo">Undo</button>
+<button class="secondary" id="clear">Hapus semua</button>
+</div>
+</section>
+<section class="panel">
+<h2>Putar & simpan</h2>
+<div class="toolbar">
+<button id="play">▶ Putar nada</button>
+<button class="secondary" id="stop">■ Berhenti</button>
+<button class="secondary" id="export">Ekspor teks</button>
+</div>
+<p class="status" id="msg">Audio sintetis sederhana. Belum mendukung engine MIDI penuh.</p>
+</section>
+</main>
+<footer>SOLMISASI REBORN · prototipe independen</footer>
+<script>
+const notes=[];
+let audioCtx=null,stopFlag=false;
+const names=['Do','Re','Mi','Fa','Sol','La','Si'];
+const semis=[0,2,4,5,7,9,11];
+const $=id=>document.getElementById(id);
+function render(){
+ const box=$('notes');box.innerHTML='';
+ if(!notes.length)box.innerHTML='<div class="empty">Tekan angka di bawah untuk mulai menulis.</div>';
+ notes.forEach(n=>{
+  if(n==='|'){const x=document.createElement('span');x.textContent='|';x.style.fontSize='25px';box.append(x);return}
+  const d=document.createElement('div');d.className='note';
+  d.innerHTML=n==='0'?'0<small>Diam</small>':`${n}<small>${names[Number(n)-1]}</small>`;
+  box.append(d);
+ });
+ $('scoreTitle').textContent=$('song').value+' · '+$('key').value+' Mayor';
+}
+function add(n){notes.push(n);render()}
+document.querySelectorAll('[data-note]').forEach(b=>b.onclick=()=>add(b.dataset.note));
+$('rest').onclick=()=>add('0');
+$('bar').onclick=()=>add('|');
+$('undo').onclick=()=>{notes.pop();render()};
+$('clear').onclick=()=>{if(confirm('Hapus seluruh notasi?')){notes.length=0;render()}};
+$('song').oninput=render;$('key').onchange=render;
+function freqFor(n){
+ const roots={C:60,D:62,E:64,F:65,G:67,A:69,Bb:70};
+ return 440*Math.pow(2,(roots[$('key').value]+semis[Number(n)-1]-69)/12);
+}
+async function play(){
+ stopFlag=false;
+ audioCtx=audioCtx||new(window.AudioContext||window.webkitAudioContext)();
+ for(const n of notes){
+  if(stopFlag)break;
+  if(n==='|')continue;
+  if(n==='0'){await new Promise(r=>setTimeout(r,350));continue}
+  const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();
+  osc.type='sine';osc.frequency.value=freqFor(n);
+  gain.gain.setValueAtTime(.0001,audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(.16,audioCtx.currentTime+.025);
+  gain.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+.30);
+  osc.connect(gain);gain.connect(audioCtx.destination);
+  osc.start();osc.stop(audioCtx.currentTime+.32);
+  await new Promise(r=>setTimeout(r,350));
+ }
+}
+$('play').onclick=()=>play();
+$('stop').onclick=()=>{stopFlag=true};
+$('export').onclick=()=>{
+ const content=`${$('song').value}\nNada dasar: ${$('key').value}\nTempo: ${$('tempo').value}\nBirama: ${$('meter').value}\nNot: ${notes.join(' ')}`;
+ const blob=new Blob([content],{type:'text/plain'});
+ const url=URL.createObjectURL(blob),a=document.createElement('a');
+ a.href=url;a.download='partitur-solmisasi.txt';a.click();
+ URL.revokeObjectURL(url);
+ $('msg').textContent='Notasi diekspor sebagai file teks.';
+};
+render();
+</script>
+</body>
+</html>
