@@ -1,0 +1,10 @@
+
+{
+  "name": "SOLMISASI REBORN",
+  "short_name": "Solmisasi",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#e9edf0",
+  "theme_color": "#18334a",
+  "description": "Editor not angka sederhana"
+}
